@@ -54,7 +54,8 @@ def check_code_changes(before_code, after_code):
     response = requests.post(url, headers=headers, data=json.dumps(data))
     
     # 返回响应内容
-    return response.json()
+    response_dict = json.loads(response.text)
+    return response_dict["choices"][0]['message']['content']
 
 # 处理每个文件的更改
 for file in files:
@@ -99,3 +100,23 @@ for file in files:
     }
     requests.post(comment_url, json=comment_data, headers=headers)
 
+# curl -X POST https://open.bigmodel.cn/api/paas/v4/chat/completions \                                                    
+# -H "Content-Type: application/json" \
+# -H "Authorization: Bearer da1f20fa26ff33bf88deec61ff67c743.hpZFBH5QWUev0kXZ" \
+# -d '{            
+#     "model": "codegeex-4",
+#     "messages": [            
+#         {   
+#             "role": "system",
+#             "content": "You are an intelligent programming assistant named CodeGeeX. You will answer any questions related to programming, code, and computers, providing well-formatted, executable, accurate, and safe code, and detailed explanations when necessary. Task: Please provide well-formatted comments for the input code, including both multi-line and single-line comments. Please ensure not to modify the original code, only add comments. Please respond in Chinese."
+#         },                 
+#         {                                          
+#             "role": "user",
+#             "content": "Write a quicksort function"
+#         }        
+#     ],                 
+#     "top_p": 0.7,
+#     "temperature": 0.9,
+#     "max_tokens": 1024,
+#     "stop": ["", "", "", ""]
+# }'
