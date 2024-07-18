@@ -2,15 +2,13 @@ import os
 import requests
 import json
 
-# 获取环境变量
-# token = os.getenv('GITHUB_TOKEN')
-# repo = os.getenv('GITHUB_REPOSITORY')
-# pr_number = os.getenv('GITHUB_REF').split('/')[-1]
+token = os.getenv('GITHUB_TOKEN')
+repo = os.getenv('GITHUB_REPOSITORY')
+pr_number = os.getenv('GITHUB_REF').split('/')[-1]
 
-repo = "WCA-2024-tony-team"
 
 # GitHub API 基本信息
-api_url = f"https://github.ibm.com/repos/{repo}"
+api_url = f"https://github.com/repos/{repo}"
 headers = {
     'Authorization': f'token {token}',
     'Accept': 'application/vnd.github.v3+json'
