@@ -23,6 +23,6 @@ jobs:
       
       - name: Run comment script
         env:
-          GITHUB_TOKEN: ${{ secrets.MY_SERECT_VALUE }}
+          GITHUB_TOKEN: ${{ secrets.COMMENT_SERECT }}
         run: |
           python3 .github/scripts/comment_on_pr.py
