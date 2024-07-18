@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Video Component Example</title>
+  </head>
+  <body>
+    <video id="my-video" width="640" height="360" controls>
+      <source src="oceans.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+
+    <script>
+      const video = document.getElementById('my-video');
+
+      let lastPlayedTime = localStorage.getItem('currentTime') || 0;
+
+        // Event listener for the 'timeupdate' event
+        video.addEventListener('timeupdate', (event) => {
+        // Get the current time of the video playback
+        const currentTime = video.currentTime;
+
+        if (currentTime - lastPlayedTime > 1) {
+            // If the current time is greater than the last played time by one second, set the video playback time to the last played time
+            video.currentTime = lastPlayedTime;
+        } else {
+            lastPlayedTime = currentTime;
+            localStorage.setItem('currentTime', currentTime);
+        }
+        });
+      // Event listener for the 'pause' event
+      video.addEventListener('pause', (event) => {
+        // Get the current time of the video playback
+        const currentTime = video.currentTime;
+
+        // Save the current time to localStorage
+        localStorage.setItem('currentTime', currentTime);
+      });
+
+      // Check if there is a saved currentTime in localStorage
+      const savedTime = localStorage.getItem('currentTime');
+
+      if (savedTime) {
+        // If there is a saved currentTime, set the video playback time to it
+        video.currentTime = savedTime;
+      }
+    </script>
+  </body>
+</html>

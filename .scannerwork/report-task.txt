@@ -1,0 +1,6 @@
+projectKey=wca
+serverUrl=http://9.30.167.49:9000
+serverVersion=10.6.0.92116
+dashboardUrl=http://9.30.167.49:9000/dashboard?id=wca
+ceTaskId=87df0267-367c-416a-9bbc-62c24d86a0f1
+ceTaskUrl=http://9.30.167.49:9000/api/ce/task?id=87df0267-367c-416a-9bbc-62c24d86a0f1
