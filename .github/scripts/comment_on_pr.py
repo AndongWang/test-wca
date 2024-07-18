@@ -46,7 +46,7 @@ except json.JSONDecodeError as e:
     print(f"Response content: {pr_response.text}")
     raise
 
-# 利用codegeex
+# model replace with WCA
 api_key = "da1f20fa26ff33bf88deec61ff67c743.hpZFBH5QWUev0kXZ"
 
 def check_code_changes(before_code, after_code):
