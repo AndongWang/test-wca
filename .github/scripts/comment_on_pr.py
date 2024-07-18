@@ -30,6 +30,23 @@ except json.JSONDecodeError as e:
     print(f"Response content: {response.text}")
     raise
 
+# 获取最新的 commit_id
+pr_url = f"{api_url}/pulls/{pr_number}"
+pr_response = requests.get(pr_url, headers=headers)
+
+if pr_response.status_code != 200:
+    print(f"Error fetching PR details: {pr_response.status_code} {pr_response.text}")
+    pr_response.raise_for_status()
+
+try:
+    pr_details = pr_response.json()
+    commit_id = pr_details['head']['sha']
+except json.JSONDecodeError as e:
+    print(f"Error decoding JSON: {e}")
+    print(f"Response content: {pr_response.text}")
+    raise
+
+# 利用codegeex
 api_key = "da1f20fa26ff33bf88deec61ff67c743.hpZFBH5QWUev0kXZ"
 
 def check_code_changes(before_code, after_code):
@@ -104,14 +121,16 @@ for file in files:
         print(f"Error checking code changes for file {filename}: {e}")
         continue
     
-    comment_body = response.get('choices', [{}])[0].get('message', {}).get('content', '这里的更改需要注意。')
+    comment_body = response
 
     # 添加评论
     comment_url = f"{api_url}/pulls/{pr_number}/comments"
     comment_data = {
         "body": comment_body,
         "path": filename,
-        "position": new_start_line
+        "commit_id": commit_id,
+        "line": new_start_line,  # 使用 line 而不是 position
+        "side": "RIGHT"
     }
     
     comment_response = requests.post(comment_url, json=comment_data, headers=headers)
