@@ -5,7 +5,9 @@ import json
 token = os.getenv('GITHUB_TOKEN')
 repo = os.getenv('GITHUB_REPOSITORY')
 pr_number = os.getenv('GITHUB_REF').split('/')[-1]
-
+print(token)
+print(repo)
+print(pr_number)
 # GitHub API 基本信息
 api_url = f"https://api.github.com/repos/{repo}"
 headers = {
