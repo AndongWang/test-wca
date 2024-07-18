@@ -5,10 +5,11 @@ import json
 token = os.getenv('GITHUB_TOKEN')
 repo = os.getenv('GITHUB_REPOSITORY')
 pr_number = os.getenv('GITHUB_REF').split('/')[-1]
-
-
+print(token)
+print(repo)
+print(pr_number)
 # GitHub API 基本信息
-api_url = f"https://github.com/repos/{repo}"
+api_url = f"https://api.github.com/repos/{repo}"
 headers = {
     'Authorization': f'token {token}',
     'Accept': 'application/vnd.github.v3+json'
@@ -17,21 +18,28 @@ headers = {
 # 获取PR中的更改文件列表
 files_url = f"{api_url}/pulls/{pr_number}/files"
 response = requests.get(files_url, headers=headers)
-files = response.json()
+
+if response.status_code != 200:
+    print(f"Error fetching PR files: {response.status_code} {response.text}")
+    response.raise_for_status()
+
+try:
+    files = response.json()
+except json.JSONDecodeError as e:
+    print(f"Error decoding JSON: {e}")
+    print(f"Response content: {response.text}")
+    raise
 
 api_key = "da1f20fa26ff33bf88deec61ff67c743.hpZFBH5QWUev0kXZ"
 
 def check_code_changes(before_code, after_code):
-    # 设置请求的URL
     url = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
     
-    # 设置请求头
     headers = {
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}"
     }
     
-    # 设置请求体
     data = {
         "model": "codegeex-4",
         "messages": [
@@ -50,11 +58,15 @@ def check_code_changes(before_code, after_code):
         "stop": ["", "", "", ""]
     }
     
-    # 发送POST请求
     response = requests.post(url, headers=headers, data=json.dumps(data))
     
-    # 返回响应内容
-    response_dict = json.loads(response.text)
+    try:
+        response_dict = response.json()
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON from BigModel API: {e}")
+        print(f"Response content: {response.text}")
+        raise
+    
     return response_dict["choices"][0]['message']['content']
 
 # 处理每个文件的更改
@@ -67,12 +79,10 @@ for file in files:
     
     for change in file['patch'].split('\n'):
         if change.startswith('@@'):
-            # 解析更改的范围
             parts = change.split(' ')
             old_part = parts[1]
             new_part = parts[2]
             
-            # 获取行号范围
             old_start_line = int(old_part.split(',')[0][1:])
             new_start_line = int(new_part.split(',')[0][1:])
         elif change.startswith('-'):
@@ -88,7 +98,12 @@ for file in files:
             after_code += change + "\n"
 
     # 调用生成评论的API
-    response = check_code_changes(before_code, after_code)
+    try:
+        response = check_code_changes(before_code, after_code)
+    except Exception as e:
+        print(f"Error checking code changes for file {filename}: {e}")
+        continue
+    
     comment_body = response.get('choices', [{}])[0].get('message', {}).get('content', '这里的更改需要注意。')
 
     # 添加评论
@@ -98,7 +113,12 @@ for file in files:
         "path": filename,
         "position": new_start_line
     }
-    requests.post(comment_url, json=comment_data, headers=headers)
+    
+    comment_response = requests.post(comment_url, json=comment_data, headers=headers)
+    
+    if comment_response.status_code != 201:
+        print(f"Error posting comment for file {filename}: {comment_response.status_code} {comment_response.text}")
+
 
 # curl -X POST https://open.bigmodel.cn/api/paas/v4/chat/completions \                                                    
 # -H "Content-Type: application/json" \
