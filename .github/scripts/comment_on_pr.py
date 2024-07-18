@@ -4,7 +4,10 @@ import json
 
 token = os.getenv('GITHUB_TOKEN')
 repo = os.getenv('GITHUB_REPOSITORY')
-pr_number = os.getenv('GITHUB_REF').split('/')[-1]
+# 从GITHUB_EVENT_PATH获取PR编号
+with open(os.getenv('GITHUB_EVENT_PATH')) as f:
+    event = json.load(f)
+pr_number = event['pull_request']['number']
 print(token)
 print(repo)
 print(pr_number)
