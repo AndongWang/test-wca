@@ -1,3 +1,5 @@
+# Assisted by WCA@IBM
+# Latest GenAI contribution: ibm/granite-20b-code-instruct-v2
 import os
 
 def fetch_user_data(user_id):
@@ -21,12 +23,14 @@ def main():
     else:
         print("No user found")
 
-    unused_var = 42
+    # Unused variable
+    # unused_var = 42
 
     sum1 = add_numbers(1, 2)
     sum2 = add_numbers(3, 4)
     print(f"Sums: {sum1}, {sum2}")
 
+    # Inefficient string concatenation in loop
     result = ""
     for i in range(10):
         result += str(i)
@@ -42,3 +46,4 @@ def divide_by_zero():
 
 if __name__ == "__main__":
     main()
+

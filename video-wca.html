@@ -28,12 +28,12 @@
    });
 
    // Set the video progress to the last recorded position on page load
-  //  window.onload = () => {
-  //    const lastPlayTime = localStorage.getItem('lastPlayTime');
-  //    if (lastPlayTime) {
-  //      video.currentTime = lastPlayTime;
-  //    }
-  //  };
+   window.onload = () => {
+     const lastPlayTime = localStorage.getItem('lastPlayTime');
+     if (lastPlayTime) {
+       video.currentTime = lastPlayTime;
+     }
+   };
  </script>
 </body>
 </html>

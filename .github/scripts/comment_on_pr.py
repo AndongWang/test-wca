@@ -51,7 +51,7 @@ except json.JSONDecodeError as e:
 
 # model replace with WCA
 api_key = "da1f20fa26ff33bf88deec61ff67c743.hpZFBH5QWUev0kXZ"
-
+# using wca + github action/jenkins/CICD to help us code view
 def check_code_changes(before_code, after_code):
     url = "https://open.bigmodel.cn/api/paas/v4/chat/completions"
     
@@ -65,7 +65,7 @@ def check_code_changes(before_code, after_code):
         "messages": [
             {
                 "role": "system",
-                "content": "Please check the code changes below. If there are any areas that need improvement, please generate a comment. If there are no issues, please return 'pass'."
+                "content": "Please check the code changes below. If there are any areas that need improvement, please generate a comment. If there are no issues, please return explaination of change."
             },
             {
                 "role": "user",
