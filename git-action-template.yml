@@ -1,0 +1,54 @@
+name: CI/CD Pipeline # 定义工作流名称
+
+on: # 定义触发工作流的事件
+  push: # 当代码被推送到仓库时触发
+    branches:
+      - main # 仅在推送到 main 分支时触发
+  pull_request: # 当创建 pull request 时触发
+    branches:
+      - main # 仅在针对 main 分支的 pull request 时触发
+    types: # 进一步限定触发事件类型
+      - opened
+      - synchronize
+      - reopened
+      - closed
+
+jobs: # 定义工作流中的任务
+  build: # 任务名称为 build
+    runs-on: ubuntu-latest # 任务运行在最新的 Ubuntu 环境下
+
+    strategy: # 定义策略
+      matrix: # 使用矩阵策略来同时测试多个版本的 Node.js
+        node-version: [10, 12, 14] # 测试 Node.js 版本 10、12 和 14
+
+    steps: # 定义任务中的各个步骤
+      - name: Checkout code # 步骤名称
+        uses: actions/checkout@v2 # 使用 actions/checkout@v2 action 来检出代码
+        # 参考链接: https://github.com/actions/checkout
+
+      - name: Set up Node.js # 步骤名称
+        uses: actions/setup-node@v2 # 使用 actions/setup-node@v2 action 来设置 Node.js 环境
+        with: # 传递参数
+          node-version: ${{ matrix.node-version }} # 使用矩阵中的 Node.js 版本
+        # 参考链接: https://github.com/actions/setup-node
+
+      - name: Install dependencies # 步骤名称
+        run: npm install # 运行命令来安装 Node.js 依赖
+
+      - name: Run tests # 步骤名称
+        run: npm test # 运行命令来执行测试
+
+  deploy: # 任务名称为 deploy
+    needs: build # 此任务依赖于 build 任务，只有在 build 任务成功完成后才会执行
+    runs-on: ubuntu-latest # 任务运行在最新的 Ubuntu 环境下
+
+    steps: # 定义任务中的各个步骤
+      - name: Checkout code # 步骤名称
+        uses: actions/checkout@v2 # 使用 actions/checkout@v2 action 来检出代码
+        # 参考链接: https://github.com/actions/checkout
+
+      - name: Deploy to server # 步骤名称
+        env: # 定义步骤中的环境变量
+          API_KEY: ${{ secrets.API_KEY }} # 使用 GitHub Secrets 中的 API_KEY
+        run: ./deploy.sh # 运行部署脚本
+        # 部署脚本通常包含将构建后的代码上传到服务器或云服务提供商的命令
