@@ -1,0 +1,43 @@
+// Assisted by WCA@IBM
+// Latest GenAI contribution: ibm/granite-20b-code-instruct-v2
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Video Component</title>
+  </head>
+  <body>
+    <video id="video" controls>
+      <source src="oceans.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <script>
+      const video = document.getElementById('video');
+      let lastPlayedTime = 0;
+
+      // Monitor events to ensure user cannot manually drag progress bar forward
+      video.addEventListener('seeking', () => {
+        if (video.currentTime > lastPlayedTime + 1) {
+          video.currentTime = lastPlayedTime;
+        }
+      });
+
+      // Record video progress in localStorage when paused or time updates
+      video.addEventListener('pause', () => {
+        localStorage.setItem('lastPlayedTime', video.currentTime);
+      });
+      video.addEventListener('timeupdate', () => {
+        localStorage.setItem('lastPlayedTime', video.currentTime);
+      });
+
+      // Restore video progress from localStorage on page load
+      window.onload = () => {
+        const lastPlayedTimeStr = localStorage.getItem('lastPlayedTime');
+        if (lastPlayedTimeStr) {
+          lastPlayedTime = Number(lastPlayedTimeStr);
+          video.currentTime = lastPlayedTime;
+        }
+      };
+    </script>
+  </body>
+</html>
