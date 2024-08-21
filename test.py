@@ -39,7 +39,7 @@ def check_code_changes(before_code, after_code):
 
 token = os.getenv("GIT_TOKEN")
 repo = 'AndongWang/test-wca'
-pr_number = 4
+pr_number = os.getenv("PR_NUMBER")
 
 print(token)
 print(repo)
