@@ -59,13 +59,12 @@ def check_code_changes(before_code, after_code):
         "Content-Type": "application/json",
         "Authorization": f"Bearer {api_key}"
     }
-    
     data = {
         "model": "codegeex-4",
         "messages": [
             {
                 "role": "system",
-                "content": "Please check the code changes below. If there are any areas that need improvement, please generate a comment. If there are no issues, please return explaination of change."
+                "content": "Please check the code changes below. If there are any areas that need improvement, please generate a comment. If there are no issues, please return explanation of change."
             },
             {
                 "role": "user",
