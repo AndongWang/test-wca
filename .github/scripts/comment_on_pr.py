@@ -64,7 +64,7 @@ def check_code_changes(before_code, after_code):
         "messages": [
             {
                 "role": "system",
-                "content": "Please check the code changes below. If there are any areas that need improvement, please generate a comment. If there are no issues, please return explanation of change."
+                "content": "Please do the code review for changes below. If there are any areas that need improvement, please give advice."
             },
             {
                 "role": "user",
@@ -74,7 +74,7 @@ def check_code_changes(before_code, after_code):
         "top_p": 0.7,
         "temperature": 0.9,
         "max_tokens": 1024,
-        "stop": ["", "", "", ""]
+        "stop": ["<|endoftext|>", "<|user|>", "<|assistant|>", "<|observation|>"]
     }
     
     response = requests.post(url, headers=headers, data=json.dumps(data))
