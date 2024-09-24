@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Video Player</title>
+</head>
+<body>
+ <video id="video" src="oceans.mp4" controls></video>
+
+ <script>
+   const video = document.getElementById('video');
+   let lastPlayTime = 0;
+
+   // Monitor events to ensure that users cannot manually drag the progress bar forward
+   video.addEventListener('timeupdate', (event) => {
+     if (event.target.currentTime > lastPlayTime + 1) {
+       event.target.currentTime = lastPlayTime;
+     } else {
+       lastPlayTime = event.target.currentTime;
+     }
+   });
+
+   // Use localStorage to record the user's video progress
+   video.addEventListener('pause', (event) => {
+     localStorage.setItem('lastPlayTime', event.target.currentTime);
+   });
+
+   // Set the video progress to the last recorded position on page load
+  //  window.onload = () => {
+  //    const lastPlayTime = localStorage.getItem('lastPlayTime');
+  //    if (lastPlayTime) {
+  //      video.currentTime = lastPlayTime;
+  //    }
+  //  };
+ </script>
+</body>
+</html>
