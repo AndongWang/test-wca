@@ -1,0 +1,49 @@
+// Assisted by WCA@IBM
+// Latest GenAI contribution: ibm/granite-20b-code-instruct-v2
+Sure! Here's an example of how you can implement the requirements using HTML5 and JavaScript:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta http-equiv="X-UA-Compatible" content="IE=edge">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Video Player with Monitor Events</title>
+</head>
+<body>
+ <video id="video" src="oceans.mp4" controls></video>
+
+ <script>
+   const video = document.getElementById('video');
+   let lastPlayTime = null;
+
+   // Monitor events to ensure that users cannot manually drag the progress bar forward
+   video.addEventListener('timeupdate', (event) => {
+     if (lastPlayTime === null) {
+       lastPlayTime = event.target.currentTime;
+       return;
+     }
+
+     if (event.target.currentTime > lastPlayTime + 1) {
+       event.target.currentTime = lastPlayTime;
+     } else {
+       lastPlayTime = event.target.currentTime;
+     }
+   });
+
+   // Use localStorage to record the user's video progress
+   video.addEventListener('pause', (event) => {
+     localStorage.setItem('videoProgress', event.target.currentTime);
+   });
+
+   video.addEventListener('play', (event) => {
+     const progress = localStorage.getItem('videoProgress');
+     if (progress) {
+       event.target.currentTime = progress;
+     }
+   });
+ </script>
+</body>
+</html>
+
+This example uses the timeupdate event to monitor the video progress and the pause and play events to save and restore the video progress. The monitor event checks if the updated time is more than one second ahead of the last play time, and if so, reverts to the last play time. The localStorage is used to save the video progress when the video is paused and to retrieve the video progress when the video is played. The video source is oceans.mp4 in the root path.
