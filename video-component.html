@@ -2,69 +2,69 @@
 // Latest GenAI contribution: ibm/granite-20b-code-instruct-v2
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Video Player</title>
-    <style>
-      #video-container {
-        position: relative;
-        width: 640px;
-        height: 360px;
-      }
+ <head>
+   <meta charset="UTF-8" />
+   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Video Player</title>
+   <style>
+     #video-container {
+       position: relative;
+       width: 640px;
+       height: 360px;
+     }
 
-      #progress-bar {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 5px;
-        background-color: #ddd;
-        width: 0%;
-      }
-    </style>
-  </head>
-  <body>
-    <div id="video-container">
-      <video src="oceans.mp4" controls>
-        Your browser does not support the video tag.
-      </video>
-      <div id="progress-bar"></div>
-    </div>
+     #progress-bar {
+       position: absolute;
+       top: 0;
+       left: 0;
+       height: 5px;
+       background-color: #ddd;
+       width: 0%;
+     }
+   </style>
+ </head>
+ <body>
+   <div id="video-container">
+     <video src="oceans.mp4" controls>
+       Your browser does not support the video tag.
+     </video>
+     <div id="progress-bar"></div>
+   </div>
 
-    <script>
-      const video = document.querySelector('video');
-      const progressBar = document.getElementById('progress-bar');
+   <script>
+     const video = document.querySelector('video');
+     const progressBar = document.getElementById('progress-bar');
 
-      let lastPlayTime = 0; // initialize to current time
+     let lastPlayTime = 0; // initialize to current time
 
-      // Monitor events to ensure that users cannot manually drag the progress bar forward
-      video.addEventListener('timeupdate', (event) => {
-        if (event.target.currentTime > lastPlayTime + 1) {
-          event.target.currentTime = lastPlayTime;
-        } else {
-          lastPlayTime = event.target.currentTime;
-        }
-        updateProgressBar();
-      });
+     // Monitor events to ensure that users cannot manually drag the progress bar forward
+     video.addEventListener('timeupdate', (event) => {
+       if (event.target.currentTime > lastPlayTime + 1) {
+         event.target.currentTime = lastPlayTime;
+       } else {
+         lastPlayTime = event.target.currentTime;
+       }
+       updateProgressBar();
+     });
 
-      // Use localStorage to record the user's video progress, triggered on video pause and time update events
-      video.addEventListener('pause', () => {
-        lastPlayTime = video.currentTime;
-        localStorage.setItem('lastPlayTime', lastPlayTime);
-      });
+     // Use localStorage to record the user's video progress, triggered on video pause and time update events
+     video.addEventListener('pause', () => {
+       lastPlayTime = video.currentTime;
+       localStorage.setItem('lastPlayTime', lastPlayTime);
+     });
 
-      video.addEventListener('play', () => {
-        lastPlayTime = Number(localStorage.getItem('lastPlayTime')) || 0;
-        video.currentTime = lastPlayTime;
-        updateProgressBar();
-      });
+     video.addEventListener('play', () => {
+       lastPlayTime = Number(localStorage.getItem('lastPlayTime')) || 0;
+       video.currentTime = lastPlayTime;
+       updateProgressBar();
+     });
 
-      // Update the progress bar as the video plays
-      function updateProgressBar() {
-        const percent = (video.currentTime / video.duration) * 100;
-        progressBar.style.width = `${percent}%`;
-      }
-    </script>
-  </body>
+     // Update the progress bar as the video plays
+     function updateProgressBar() {
+       const percent = (video.currentTime / video.duration) * 100;
+       progressBar.style.width = `${percent}%`;
+     }
+   </script>
+ </body>
 </html>
